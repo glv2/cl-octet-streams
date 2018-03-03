@@ -14,5 +14,5 @@
            #:with-octet-output-stream
            #:make-octet-pipe
            #:with-octet-pipe
-           #:make-connected-stream-pair
-           #:with-connected-stream-pair))
+           #:make-connected-octet-streams
+           #:with-connected-octet-streams))

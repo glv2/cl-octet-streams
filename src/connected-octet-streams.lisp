@@ -7,16 +7,16 @@
 (in-package :cl-octet-streams)
 
 
-(defun make-connected-stream-pair ()
+(defun make-connected-octet-streams ()
   (let* ((pipe1 (make-octet-pipe))
          (pipe2 (make-octet-pipe))
          (stream1 (make-two-way-stream pipe1 pipe2))
          (stream2 (make-two-way-stream pipe2 pipe1)))
     (values stream1 stream2)))
 
-(defmacro with-connected-stream-pair ((var1 var2) &body body)
+(defmacro with-connected-octet-streams ((var1 var2) &body body)
   `(multiple-value-bind (,var1 ,var2)
-       (make-io-stream-pair)
+       (make-connected-octet-streams)
      (unwind-protect
           (progn ,@body)
        (close ,var1)

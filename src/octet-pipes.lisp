@@ -25,12 +25,11 @@
   (write-byte byte (octet-pipe-output stream)))
 
 (defmethod stream-read-byte ((stream octet-pipe))
-  (let* ((input (octet-pipe-input stream))
-         (byte (read-byte input nil :eof)))
-    (if (equal byte :eof)
+  (let ((byte (read-byte (octet-pipe-input stream) nil :eof)))
+    (if (eql byte :eof)
         (progn
           (flush-output-to-input stream)
-          (read-byte input nil :eof))
+          (read-byte (octet-pipe-input stream) nil :eof))
         byte)))
 
 (defmethod stream-write-sequence ((stream octet-pipe) seq start end &key &allow-other-keys)
@@ -43,14 +42,13 @@
 (defmethod stream-clear-output ((stream octet-pipe))
   (clear-output (octet-pipe-output stream)))
 
-(defmethod stream-clear-output ((stream octet-pipe))
+(defmethod stream-clear-input ((stream octet-pipe))
   (clear-input (octet-pipe-input stream)))
 
 (defun make-octet-pipe ()
-  (let ((empty (make-array 0 :element-type '(unsigned-byte 8))))
-    (make-instance 'octet-pipe
-                   :input (make-octet-input-stream empty)
-                   :output (make-octet-output-stream))))
+  (make-instance 'octet-pipe
+                 :input (make-octet-input-stream #())
+                 :output (make-octet-output-stream)))
 
 (defmacro with-octet-pipe ((var) &body body)
   `(with-open-stream (,var (make-octet-pipe))

@@ -60,8 +60,8 @@
   (let ((end (or end (length seq))))
     (make-instance 'octet-input-stream
                    :buffer (coerce (subseq seq start end) 'simple-octet-vector)
-                   :start 0
-                   :end (- end start))))
+                   :buffer-start 0
+                   :buffer-end (- end start))))
 
 (defmacro with-octet-input-stream ((var seq &optional (start 0) end) &body body)
   `(with-open-stream (,var (make-octet-input-stream ,seq ,start ,end))
@@ -76,8 +76,11 @@
          (buffer-end (octet-stream-buffer-end stream))
          (buffer-length (length buffer)))
     (when (>= buffer-end buffer-length)
-      (setf buffer (adjust-array buffer (* 2 buffer-length)))
-      (setf (octet-stream-buffer stream) buffer))
+      (let ((new-buffer (make-array (* 2 buffer-length)
+                                    :element-type '(unsigned-byte 8))))
+        (replace new-buffer buffer :end2 buffer-end)
+        (setf buffer new-buffer)
+        (setf (octet-stream-buffer stream) buffer)))
     (setf (aref buffer buffer-end) byte)
     (setf (octet-stream-buffer-end stream) (1+ buffer-end))
     byte))
@@ -88,8 +91,11 @@
          (buffer-length (length buffer))
          (length (- end start)))
     (when (>= (+ buffer-end length) buffer-length)
-      (setf buffer (adjust-array buffer (* 2 (max buffer-length length))))
-      (setf (octet-stream-buffer stream) buffer))
+      (let ((new-buffer (make-array (* 2 (max buffer-length length))
+                                    :element-type '(unsigned-byte 8))))
+        (replace new-buffer buffer :end2 buffer-end)
+        (setf buffer new-buffer)
+        (setf (octet-stream-buffer stream) buffer)))
     (replace buffer seq
              :start1 buffer-end
              :start2 start :end2 end)
@@ -108,9 +114,7 @@
 
 (defun make-octet-output-stream ()
   (make-instance 'octet-output-stream
-                 :buffer (make-array 128
-                                     :element-type '(unsigned-byte 8)
-                                     :adjustable t)
+                 :buffer (make-array 128 :element-type '(unsigned-byte 8))
                  :buffer-start 0
                  :buffer-end 0))
 
