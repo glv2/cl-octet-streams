@@ -5,7 +5,7 @@
 
 
 (defpackage :cl-octet-streams/tests
-  (:use :cl :cl-octet-streams :fiveam)
+  (:use :cl :octet-streams :fiveam)
   (:import-from :cl-octet-streams
                 #:octet-input-stream
                 #:octet-output-stream

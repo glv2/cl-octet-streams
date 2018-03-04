@@ -4,8 +4,8 @@
 ;;;; See the file LICENSE for terms of use and distribution.
 
 
-(defpackage :cl-octet-streams
-  (:nicknames :octet-streams)
+(defpackage :octet-streams
+  (:nicknames :cl-octet-streams)
   (:use :cl :trivial-gray-streams)
   (:export #:make-octet-input-stream
            #:with-octet-input-stream

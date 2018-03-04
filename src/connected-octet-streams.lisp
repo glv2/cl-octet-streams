@@ -4,10 +4,13 @@
 ;;;; See the file LICENSE for terms of use and distribution.
 
 
-(in-package :cl-octet-streams)
+(in-package :octet-streams)
 
 
 (defun make-connected-octet-streams ()
+  "Return two streams connected to each other. The bytes written to
+the first stream can be read from the second, and the bytes written to
+the second stream can be read from the first."
   (let* ((pipe1 (make-octet-pipe))
          (pipe2 (make-octet-pipe))
          (stream1 (make-two-way-stream pipe1 pipe2))
@@ -15,6 +18,8 @@
     (values stream1 stream2)))
 
 (defmacro with-connected-octet-streams ((var1 var2) &body body)
+  "Within BODY, VAR1 and VAR2 are bound to connected octet streams.
+The result of the last form of BODY is returned."
   `(multiple-value-bind (,var1 ,var2)
        (make-connected-octet-streams)
      (unwind-protect

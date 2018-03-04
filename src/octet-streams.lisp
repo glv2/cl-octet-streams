@@ -4,7 +4,7 @@
 ;;;; See the file LICENSE for terms of use and distribution.
 
 
-(in-package :cl-octet-streams)
+(in-package :octet-streams)
 
 
 (deftype simple-octet-vector ()
@@ -57,6 +57,8 @@
   nil)
 
 (defun make-octet-input-stream (seq &optional (start 0) end)
+  "Return an input stream which will supply the bytes of SEQ between
+START and END in order."
   (let ((end (or end (length seq))))
     (make-instance 'octet-input-stream
                    :buffer (coerce (subseq seq start end) 'simple-octet-vector)
@@ -64,6 +66,8 @@
                    :buffer-end (- end start))))
 
 (defmacro with-octet-input-stream ((var seq &optional (start 0) end) &body body)
+  "Within BODY, VAR is bound to an octet input stream defined by SEQ,
+START and END. The result of the last form of BODY is returned."
   `(with-open-stream (,var (make-octet-input-stream ,seq ,start ,end))
      ,@body))
 
@@ -107,18 +111,25 @@
   nil)
 
 (defun get-output-stream-octets (stream)
+  "Return the bytes that were written to an octet output STREAM."
   (let ((buffer (octet-stream-buffer stream))
         (buffer-end (octet-stream-buffer-end stream)))
     (setf (octet-stream-buffer-end stream) 0)
     (subseq buffer 0 buffer-end)))
 
 (defun make-octet-output-stream ()
+  "Return an output stream which will accumulate all the bytes written
+to it for the benefit of the function GET-OUTPUT-STREAM-OCTETS."
   (make-instance 'octet-output-stream
                  :buffer (make-array 128 :element-type '(unsigned-byte 8))
                  :buffer-start 0
                  :buffer-end 0))
 
 (defmacro with-octet-output-stream ((var) &body body)
+  "Within BODY, VAR is bound to an octet output stream. After all the
+forms in BODY have been executed, the bytes that have been written to
+VAR (and that haven't been consumed by a call to
+GET-OUTPUT-STREAM-OCTETS within BODY) are returned."
   `(with-open-stream (,var (make-octet-output-stream))
      ,@body
      (get-output-stream-octets ,var)))

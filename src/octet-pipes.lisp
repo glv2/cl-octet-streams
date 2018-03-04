@@ -4,7 +4,7 @@
 ;;;; See the file LICENSE for terms of use and distribution.
 
 
-(in-package :cl-octet-streams)
+(in-package :octet-streams)
 
 
 (defclass octet-pipe (fundamental-binary-input-stream fundamental-binary-output-stream)
@@ -46,10 +46,14 @@
   (clear-input (octet-pipe-input stream)))
 
 (defun make-octet-pipe ()
+  "Return a stream which will supply the bytes that have been written
+to it in order."
   (make-instance 'octet-pipe
                  :input (make-octet-input-stream #())
                  :output (make-octet-output-stream)))
 
 (defmacro with-octet-pipe ((var) &body body)
+  "Within BODY, VAR is bound to an octet pipe. The result of the last
+form of BODY is returned."
   `(with-open-stream (,var (make-octet-pipe))
      ,@body))
