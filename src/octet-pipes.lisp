@@ -39,10 +39,18 @@
   (flush-output-to-input stream)
   (read-sequence seq (octet-pipe-input stream) :start start :end end))
 
+(defmethod stream-finish-output ((stream octet-pipe))
+  (flush-output-to-input stream))
+
+(defmethod stream-force-output ((stream octet-pipe))
+  (flush-output-to-input stream))
+
 (defmethod stream-clear-output ((stream octet-pipe))
-  (clear-output (octet-pipe-output stream)))
+  (clear-output (octet-pipe-output stream))
+  (clear-input (octet-pipe-input stream)))
 
 (defmethod stream-clear-input ((stream octet-pipe))
+  (clear-output (octet-pipe-output stream))
   (clear-input (octet-pipe-input stream)))
 
 (defun make-octet-pipe ()
