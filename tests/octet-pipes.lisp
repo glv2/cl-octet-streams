@@ -14,9 +14,9 @@
 (in-suite octet-pipes)
 
 (test make-octet-pipe
-  (is-true (typep (make-octet-pipe) 'octet-pipe))
+  (is-true (typep (make-octet-pipe) 'stream))
   (with-octet-pipe (s)
-    (is-true (typep (make-octet-pipe) 'octet-pipe))))
+    (is-true (typep (make-octet-pipe) 'stream))))
 
 (test read-byte-octet-pipe
   (with-octet-pipe (s)

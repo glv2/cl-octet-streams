@@ -14,19 +14,19 @@
 (in-suite octet-input-streams)
 
 (test make-octet-input-stream
-  (is-true (typep (make-octet-input-stream #()) 'octet-input-stream))
-  (is-true (typep (make-octet-input-stream #(1 2 3)) 'octet-input-stream))
-  (is-true (typep (make-octet-input-stream #(1 2 3)) 'octet-input-stream))
-  (is-true (typep (make-octet-input-stream #(0 1 2 3 4 5 6) 3) 'octet-input-stream))
-  (is-true (typep (make-octet-input-stream #(0 1 2 3 4 5 6) 3 5) 'octet-input-stream))
+  (is-true (typep (make-octet-input-stream #()) 'stream))
+  (is-true (typep (make-octet-input-stream #(1 2 3)) 'stream))
+  (is-true (typep (make-octet-input-stream #(1 2 3)) 'stream))
+  (is-true (typep (make-octet-input-stream #(0 1 2 3 4 5 6) 3) 'stream))
+  (is-true (typep (make-octet-input-stream #(0 1 2 3 4 5 6) 3 5) 'stream))
   (with-octet-input-stream (s #())
-    (is-true (typep s 'octet-input-stream)))
+    (is-true (typep s 'stream)))
   (with-octet-input-stream (s #(1 2 3))
-    (is-true (typep s 'octet-input-stream)))
+    (is-true (typep s 'stream)))
   (with-octet-input-stream (s #(0 1 2 3 4 5 6) 3)
-    (is-true (typep s 'octet-input-stream)))
+    (is-true (typep s 'stream)))
   (with-octet-input-stream (s #(0 1 2 3 4 5 6) 3 5)
-    (is-true (typep s 'octet-input-stream))))
+    (is-true (typep s 'stream))))
 
 (test read-byte-input-stream
   (with-octet-input-stream (s #(0 1 2 3 4 55 91 2 211 41))

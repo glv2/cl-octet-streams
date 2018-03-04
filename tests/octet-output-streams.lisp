@@ -14,9 +14,9 @@
 (in-suite octet-output-streams)
 
 (test make-octet-output-stream
-  (is-true (typep (make-octet-output-stream) 'octet-output-stream))
+  (is-true (typep (make-octet-output-stream) 'stream))
   (with-octet-output-stream (s)
-    (is-true (typep s 'octet-output-stream))))
+    (is-true (typep s 'stream))))
 
 (test write-byte-output-stream
   (with-octet-output-stream (s)
