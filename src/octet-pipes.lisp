@@ -18,11 +18,12 @@
   (let ((buffer (get-output-stream-octets (octet-pipe-output octet-pipe))))
     (unless (zerop (length buffer))
       (setf (octet-pipe-input octet-pipe)
-            (make-concatenated-stream (octet-pipe-input octet-pipe)
-                                      (make-instance 'octet-input-stream
-                                                     :buffer buffer
-                                                     :buffer-start 0
-                                                     :buffer-end (length buffer)))))))
+            (apply #'make-concatenated-stream
+                   (nconc (concatenated-stream-streams (octet-pipe-input octet-pipe))
+                          (list (make-instance 'octet-input-stream
+                                               :buffer buffer
+                                               :buffer-start 0
+                                               :buffer-end (length buffer)))))))))
 
 (defmethod stream-listen ((stream octet-pipe))
   (or (some #'listen (concatenated-stream-streams (octet-pipe-input stream)))
