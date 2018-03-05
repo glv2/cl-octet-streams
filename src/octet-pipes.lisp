@@ -19,7 +19,10 @@
     (unless (zerop (length buffer))
       (setf (octet-pipe-input octet-pipe)
             (make-concatenated-stream (octet-pipe-input octet-pipe)
-                                      (make-octet-input-stream buffer))))))
+                                      (make-instance 'octet-input-stream
+                                                     :buffer buffer
+                                                     :buffer-start 0
+                                                     :buffer-end (length buffer)))))))
 
 (defmethod stream-listen ((stream octet-pipe))
   (or (some #'listen (concatenated-stream-streams (octet-pipe-input stream)))
