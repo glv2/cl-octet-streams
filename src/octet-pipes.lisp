@@ -21,16 +21,16 @@
             (make-concatenated-stream (octet-pipe-input octet-pipe)
                                       (make-octet-input-stream buffer))))))
 
+(defmethod stream-listen ((stream octet-pipe))
+  (or (some #'listen (concatenated-stream-streams (octet-pipe-input stream)))
+      (plusp (octet-stream-buffer-end (octet-pipe-output stream)))))
+
 (defmethod stream-write-byte ((stream octet-pipe) byte)
   (write-byte byte (octet-pipe-output stream)))
 
 (defmethod stream-read-byte ((stream octet-pipe))
-  (let ((byte (read-byte (octet-pipe-input stream) nil :eof)))
-    (if (eql byte :eof)
-        (progn
-          (flush-output-to-input stream)
-          (read-byte (octet-pipe-input stream) nil :eof))
-        byte)))
+  (flush-output-to-input stream)
+  (read-byte (octet-pipe-input stream) nil :eof))
 
 (defmethod stream-write-sequence ((stream octet-pipe) seq start end &key &allow-other-keys)
   (write-sequence seq (octet-pipe-output stream) :start start :end end))
@@ -57,7 +57,7 @@
   "Return a stream which will supply the bytes that have been written
 to it in order."
   (make-instance 'octet-pipe
-                 :input (make-octet-input-stream #())
+                 :input (make-concatenated-stream)
                  :output (make-octet-output-stream)))
 
 (defmacro with-octet-pipe ((var) &body body)

@@ -31,6 +31,9 @@
 (defclass octet-input-stream (octet-stream fundamental-binary-input-stream)
   ())
 
+(defmethod stream-listen ((stream octet-input-stream))
+  (< (octet-stream-buffer-start stream) (octet-stream-buffer-end stream)))
+
 (defmethod stream-read-byte ((stream octet-input-stream))
   (let ((buffer (octet-stream-buffer stream))
         (buffer-start (octet-stream-buffer-start stream))
