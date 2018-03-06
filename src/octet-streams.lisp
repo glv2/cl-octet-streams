@@ -38,7 +38,7 @@
   (let ((buffer (octet-stream-buffer stream))
         (buffer-start (octet-stream-buffer-start stream))
         (buffer-end (octet-stream-buffer-end stream)))
-    (if (>= buffer-start buffer-end)
+    (if (= buffer-start buffer-end)
         :eof
         (progn
           (setf (octet-stream-buffer-start stream) (1+ buffer-start))
@@ -82,7 +82,7 @@ START and END. The result of the last form of BODY is returned."
   (let* ((buffer (octet-stream-buffer stream))
          (buffer-end (octet-stream-buffer-end stream))
          (buffer-length (length buffer)))
-    (when (>= buffer-end buffer-length)
+    (when (= buffer-end buffer-length)
       (let ((new-buffer (make-array (* 2 buffer-length)
                                     :element-type '(unsigned-byte 8))))
         (replace new-buffer buffer :end2 buffer-end)
@@ -97,7 +97,7 @@ START and END. The result of the last form of BODY is returned."
          (buffer-end (octet-stream-buffer-end stream))
          (buffer-length (length buffer))
          (length (- end start)))
-    (when (>= (+ buffer-end length) buffer-length)
+    (when (> (+ buffer-end length) buffer-length)
       (let ((new-buffer (make-array (* 2 (max buffer-length length))
                                     :element-type '(unsigned-byte 8))))
         (replace new-buffer buffer :end2 buffer-end)
