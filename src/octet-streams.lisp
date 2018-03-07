@@ -48,25 +48,23 @@
   (declare (type simple-octet-vector buffer1 buffer2)
            (type index start1 end1 start2 end2)
            (optimize (speed 3)))
-  (replace buffer1 buffer2
-           :start1 start1 :end1 end1
-           :start2 start2 :end2 end2))
+  (replace buffer1 buffer2 :start1 start1 :end1 end1 :start2 start2 :end2 end2))
 
 (defmethod stream-read-sequence ((stream octet-input-stream) seq start end &key &allow-other-keys)
   (let* ((buffer (octet-stream-buffer stream))
          (buffer-start (octet-stream-buffer-start stream))
          (buffer-end (octet-stream-buffer-end stream))
          (length (min (- end start) (- buffer-end buffer-start))))
-    (typecase seq
-      ;; Dirty trick to force the use of optimized memory copy
-      ;; functions for SIMPLE-OCTET-VECTORs
-      (simple-octet-vector (replace-fast seq buffer start end buffer-start buffer-end))
-      (t (replace seq buffer :start1 start :end1 end :start2 buffer-start :end2 buffer-end)))
+    (if (typep seq 'simple-octet-vector)
+        ;; Force the use of optimized memory copy functions for simple arrays
+        (replace-fast seq buffer start end buffer-start buffer-end)
+        (replace seq buffer :start1 start :end1 end :start2 buffer-start :end2 buffer-end))
     (setf (octet-stream-buffer-start stream) (+ buffer-start length))
     (+ start length)))
 
 (defmethod stream-clear-input ((stream octet-input-stream))
-  (setf (octet-stream-buffer-start stream) (octet-stream-buffer-end stream))
+  (setf (octet-stream-buffer-start stream) 0)
+  (setf (octet-stream-buffer-end stream) 0)
   nil)
 
 (defun make-octet-input-stream (seq &optional (start 0) end)
@@ -95,7 +93,7 @@ START and END. The result of the last form of BODY is returned."
     (when (= buffer-end buffer-length)
       (let ((new-buffer (make-array (* 2 buffer-length)
                                     :element-type '(unsigned-byte 8))))
-        (replace new-buffer buffer :end2 buffer-end)
+        (replace-fast new-buffer buffer 0 buffer-end 0 buffer-end)
         (setf buffer new-buffer)
         (setf (octet-stream-buffer stream) buffer)))
     (setf (aref buffer buffer-end) byte)
@@ -110,14 +108,13 @@ START and END. The result of the last form of BODY is returned."
     (when (> (+ buffer-end length) buffer-length)
       (let ((new-buffer (make-array (* 2 (max buffer-length length))
                                     :element-type '(unsigned-byte 8))))
-        (replace new-buffer buffer :end2 buffer-end)
+        (replace-fast new-buffer buffer 0 buffer-end 0 buffer-end)
         (setf buffer new-buffer)
         (setf (octet-stream-buffer stream) buffer)))
-    (typecase seq
-      ;; Dirty trick to force the use of optimized memory copy
-      ;; functions for SIMPLE-OCTET-VECTORs
-      (simple-octet-vector (replace-fast buffer seq buffer-end (+ buffer-end length) start end))
-      (t (replace buffer seq :start1 buffer-end :start2 start :end2 end)))
+    (if (typep seq 'simple-octet-vector)
+        ;; Force the use of optimized memory copy functions for simple arrays
+        (replace-fast buffer seq buffer-end (+ buffer-end length) start end)
+        (replace buffer seq :start1 buffer-end :start2 start :end2 end))
     (setf (octet-stream-buffer-end stream) (+ buffer-end length))
     seq))
 
