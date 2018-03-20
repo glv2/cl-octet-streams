@@ -7,23 +7,22 @@ It was inspired by the [[https://github.com/sharplispers/trivial-octet-streams][
 
 The only dependency is the [[https://common-lisp.net/project/trivial-gray-streams][trivial-gray-streams]] library.
 
-* In-memory octet streams
+* API
 ** Input stream
 
 #+BEGIN_SRC lisp
 (make-octet-input-stream seq &optional (start 0) end) => stream
 #+END_SRC
 
-Return an input stream which will supply the bytes of SEQ between
-START and END in order.
+Return an input stream which will supply the bytes of /seq/ between /start/ and
+/end/ in order.
 
 #+BEGIN_SRC lisp
 (with-octet-input-stream (var seq &optional (start 0) end) &body body)
 #+END_SRC
 
-Within /body/, /var/ is bound to an octet input stream defined by
-/seq/, /start/ and /end/. The result of the last form of /body/ is
-returned.
+Within /body/, /var/ is bound to an octet input stream defined by /seq/, /start/
+and /end/. The result of the last form of /body/ is returned.
 
 ** Output stream
 
@@ -31,8 +30,8 @@ returned.
 (make-octet-output-stream) => stream
 #+END_SRC
 
-Return an output stream which will accumulate all the bytes written to
-it for the benefit of the function /get-output-stream-octets/.
+Return an output stream which will accumulate all the bytes written to it for
+the benefit of the function /get-output-stream-octets/.
 
 #+BEGIN_SRC lisp
 (get-output-stream-octets stream) => bytes
@@ -44,10 +43,10 @@ Return the bytes that were written to an octet output /stream/.
 (with-octet-output-stream (var) &body body) => bytes
 #+END_SRC
 
-Within /body/, /var/ is bound to an octet output stream. After all the
-forms in /body/ have been executed, the bytes that have been written
-to /var/ (and that haven't been consumed by a call to
-/get-output-stream-octets/ within /body/) are returned.
+Within /body/, /var/ is bound to an octet output stream. After all the forms in
+/body/ have been executed, the bytes that have been written to /var/ (and that
+haven't been consumed by a call to /get-output-stream-octets/ within /body/) are
+returned.
 
 ** Pipe
 
@@ -55,15 +54,15 @@ to /var/ (and that haven't been consumed by a call to
 (make-octet-pipe) => stream
 #+END_SRC
 
-Return a stream which will supply the bytes that have been written to
-it in order.
+Return a stream which will supply the bytes that have been written to it in
+order.
 
 #+BEGIN_SRC lisp
 (with-octet-pipe (var) &body body)
 #+END_SRC
 
-Within /body/, /var/ is bound to an octet pipe. The result of the last
-form of /body/ is returned.
+Within /body/, /var/ is bound to an octet pipe. The result of the last form of
+/body/ is returned.
 
 ** Connected streams
 
@@ -71,16 +70,16 @@ form of /body/ is returned.
 (make-connected-octet-streams) => stream1, stream2
 #+END_SRC
 
-Return two streams connected to each other. The bytes written to the
-first stream can be read from the second, and the bytes written to the
-second stream can be read from the first.
+Return two streams connected to each other. The bytes written to the first
+stream can be read from the second, and the bytes written to the second stream
+can be read from the first.
 
 #+BEGIN_SRC lisp
 (with-connected-octet-streams (var1 var2) &body body)
 #+END_SRC
 
-Within /body/, /var1/ and /var2/ are bound to connected octet streams.
-The result of the last form of /body/ is returned.
+Within /body/, /var1/ and /var2/ are bound to octet streams connected to each
+other. The result of the last form of /body/ is returned.
 
 * Tests
 

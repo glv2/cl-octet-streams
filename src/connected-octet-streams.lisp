@@ -18,8 +18,8 @@ the second stream can be read from the first."
     (values stream1 stream2)))
 
 (defmacro with-connected-octet-streams ((var1 var2) &body body)
-  "Within BODY, VAR1 and VAR2 are bound to connected octet streams.
-The result of the last form of BODY is returned."
+  "Within BODY, VAR1 and VAR2 are bound to octet streams connected to each
+other. The result of the last form of BODY is returned."
   `(multiple-value-bind (,var1 ,var2)
        (make-connected-octet-streams)
      (unwind-protect
