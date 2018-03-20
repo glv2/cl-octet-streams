@@ -42,6 +42,7 @@
     (is (eql 3 (read-byte s2 nil :eof)))
     (is (eql 4 (read-byte s2 nil :eof)))
     (is-false (listen s2))
+    (is (eql :eof (read-byte s2 nil :eof)))
     (write-sequence #(55 91 2 211 41) s2)
     (is (eql 55 (read-byte s1 nil :eof)))
     (is (eql 91 (read-byte s1 nil :eof)))
