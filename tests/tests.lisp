@@ -5,7 +5,19 @@
 
 
 (defpackage :cl-octet-streams/tests
-  (:use :cl :octet-streams :fiveam))
+  (:use :cl :octet-streams :fiveam)
+  (:import-from :octet-streams
+                #:ring-buffer
+                #:buffer
+                #:size
+                #:start
+                #:end
+                #:count
+                #:clear
+                #:resize
+                #:push-data
+                #:pop-data
+                #:buffer-ref))
 
 (in-package :cl-octet-streams/tests)
 

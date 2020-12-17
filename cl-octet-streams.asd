@@ -15,7 +15,7 @@
   :components ((:module "src"
                 :serial t
                 :components ((:file "package")
-                             (:file "ring-buffer")
+                             (:file "ring-buffers")
                              (:file "octet-streams")
                              (:file "octet-pipes")
                              (:file "connected-octet-streams")))))
@@ -35,6 +35,7 @@
   :components ((:module "tests"
                 :serial t
                 :components ((:file "tests")
+                             (:file "ring-buffers")
                              (:file "octet-input-streams")
                              (:file "octet-output-streams")
                              (:file "octet-pipes")
