@@ -1,5 +1,5 @@
 ;;;; This file is part of cl-octet-streams
-;;;; Copyright 2018 Guillaume LE VAILLANT
+;;;; Copyright 2018-2020 Guillaume LE VAILLANT
 ;;;; Distributed under the GNU GPL v3 or later.
 ;;;; See the file LICENSE for terms of use and distribution.
 
@@ -15,6 +15,7 @@
   :components ((:module "src"
                 :serial t
                 :components ((:file "package")
+                             (:file "ring-buffer")
                              (:file "octet-streams")
                              (:file "octet-pipes")
                              (:file "connected-octet-streams")))))
