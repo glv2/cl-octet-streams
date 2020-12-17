@@ -15,6 +15,14 @@
 (defmethod stream-element-type ((stream octet-stream))
   '(unsigned-byte 8))
 
+(defun octet-stream-length (stream)
+  "Return the number of bytes available in STREAM."
+  (buffer-count (buffer stream)))
+
+(defun octet-stream-ref (stream index)
+  "Return the byte at INDEX in STREAM."
+  (buffer-ref (buffer stream) index))
+
 
 (defclass octet-input-stream (octet-stream fundamental-binary-input-stream)
   ())

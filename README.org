@@ -81,6 +81,22 @@ can be read from the first.
 Within /body/, /var1/ and /var2/ are bound to octet streams connected to each
 other. The result of the last form of /body/ is returned.
 
+** Extra functions
+
+The following functions can be used on input streams, output streams and pipes.
+
+#+BEGIN_SRC lisp
+(octet-stream-length stream) => integer
+#+END_SRC
+
+Return the number of bytes available in /stream/.
+
+#+BEGIN_SRC lisp
+(octet-stream-ref stream index) => byte
+#+END_SRC
+
+Return the byte at /index/ in /stream/.
+
 * Tests
 
 The tests require the [[https://common-lisp.net/project/fiveam][fiveam]] library.
