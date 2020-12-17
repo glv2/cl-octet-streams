@@ -1,5 +1,5 @@
 ;;;; This file is part of cl-octet-streams
-;;;; Copyright 2018 Guillaume LE VAILLANT
+;;;; Copyright 2018-2020 Guillaume LE VAILLANT
 ;;;; Distributed under the GNU GPL v3 or later.
 ;;;; See the file LICENSE for terms of use and distribution.
 
@@ -127,3 +127,30 @@
         (is (eq buffer (write-sequence buffer s)))
         (clear-output s)
         (is (eql :eof (read-byte s nil :eof))))))
+
+(test octet-stream-length
+  (with-octet-pipe (s)
+    (is (= 0 (octet-stream-length s)))
+    (write-sequence #(0 1 2) s)
+    (is (= 3 (octet-stream-length s)))
+    (write-sequence #(0 1 2 3 4 5 6 7 8 9) s)
+    (is (= 13 (octet-stream-length s)))
+    (read-byte s nil :eof)
+    (read-byte s nil :eof)
+    (is (= 11 (octet-stream-length s)))
+    (read-byte s nil :eof)
+    (is (= 10 (octet-stream-length s)))))
+
+(test octet-stream-ref
+  (with-octet-pipe (s)
+    (signals error (octet-stream-ref s 2))
+    (write-sequence #(0 1 2) s)
+    (is (= 2 (octet-stream-ref s 2)))
+    (write-sequence #(3 4 5 6 7 8) s)
+    (is (= 8 (octet-stream-ref s 8)))
+    (read-byte s nil :eof)
+    (read-byte s nil :eof)
+    (write-sequence #(9 10 11) s)
+    (is (= 2 (octet-stream-ref s 0)))
+    (is (= 11 (octet-stream-ref s 9)))
+    (signals error (octet-stream-ref s 10))))
