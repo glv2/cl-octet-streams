@@ -145,11 +145,16 @@
 (defgeneric buffer-ref (ring-buffer index))
 
 (defmethod buffer-ref ((ring-buffer ring-buffer) index)
-  (with-slots (buffer size start count) ring-buffer
+  (let ((buffer (buffer ring-buffer))
+        (size (buffer-size ring-buffer))
+        (start (buffer-start ring-buffer))
+        (count (buffer-count ring-buffer)))
     (unless (<= 0 index (1- count))
       (error "Wrong index for a buffer containing ~d bytes: ~d." count index))
-    (let ((real-index (mod (+ start index) size)))
-      (aref buffer real-index))))
+    (let ((index (+ start index)))
+      (when (>= index size)
+        (decf index size))
+      (aref buffer index))))
 
 (defgeneric search-data (ring-buffer pattern jump-table))
 
