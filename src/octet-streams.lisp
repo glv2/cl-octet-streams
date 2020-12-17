@@ -57,7 +57,7 @@ START and END in order."
   (let* ((end (or end (length seq)))
          (length (- end start))
          (buffer (make-array length :element-type '(unsigned-byte 8))))
-    (replace* buffer seq :start2 start :end2 end)
+    (replace* buffer seq :start1 0 :end1 length :start2 start :end2 end)
     (let ((ring-buffer (make-instance 'ring-buffer
                                       :buffer buffer
                                       :size length

@@ -90,7 +90,7 @@
         (resize ring-buffer (* 2 (max size length)))))
     (with-slots (buffer size start end count) ring-buffer
       (cond
-        ((< start end)
+        ((<= start end)
          (let* ((length1 (min length (- size end)))
                 (length2 (- length length1)))
            (replace* buffer seq
@@ -136,7 +136,9 @@
              (replace* seq buffer
                        :start1 (+ seq-start length1) :end1 (+ seq-start length)
                        :start2 0 :end2 length2))
-           (setf start (mod (+ start length) size))
+           (incf start length)
+           (when (>= start size)
+             (decf start size))
            (decf count length)))))
     (values seq length)))
 
