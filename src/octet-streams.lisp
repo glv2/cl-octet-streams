@@ -23,6 +23,12 @@
   "Return the byte at INDEX in STREAM."
   (buffer-ref (buffer stream) index))
 
+(defun octet-stream-search (stream pattern jump-table)
+  "Search PATTERN in the bytes of STREAM using the Boyer-Moore algorithm. The
+JUMP-TABLE must be 256 bytes long. If there is a match, return the index of the
+beginning of the PATTERN in the STREAM, otherwise return NIL."
+  (search-data (buffer stream) pattern jump-table))
+
 
 (defclass octet-input-stream (octet-stream fundamental-binary-input-stream)
   ())

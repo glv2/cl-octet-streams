@@ -17,7 +17,8 @@
                 #:resize
                 #:push-data
                 #:pop-data
-                #:buffer-ref))
+                #:buffer-ref
+                #:search-data))
 
 (in-package :cl-octet-streams/tests)
 

@@ -188,3 +188,44 @@
     (is (= 2 (buffer-ref ring-buffer 6)))
     (signals error (buffer-ref ring-buffer 7))
     (signals error (buffer-ref ring-buffer 17))))
+
+(test search-data
+  (let ((ring-buffer (make-instance 'ring-buffer
+                                    :buffer (make-buffer 10)
+                                    :size 10
+                                    :start 4
+                                    :end 6
+                                    :count 2))
+        (jump-table (make-array 256
+                                :element-type '(unsigned-byte 8)
+                                :initial-element 3)))
+    (setf (aref jump-table 4) 1)
+    (setf (aref jump-table 3) 2)
+    (is-false (search-data ring-buffer #(3 4 5) jump-table))
+    (is-false (search-data ring-buffer #(3 4 15) jump-table)))
+  (let ((ring-buffer (make-instance 'ring-buffer
+                                    :buffer (make-buffer 10)
+                                    :size 10
+                                    :start 0
+                                    :end 7
+                                    :count 7))
+        (jump-table (make-array 256
+                                :element-type '(unsigned-byte 8)
+                                :initial-element 3)))
+    (setf (aref jump-table 4) 1)
+    (setf (aref jump-table 3) 2)
+    (is (= 3 (search-data ring-buffer #(3 4 5) jump-table)))
+    (is-false (search-data ring-buffer #(3 4 15) jump-table)))
+  (let ((ring-buffer (make-instance 'ring-buffer
+                                    :buffer (make-buffer 10)
+                                    :size 10
+                                    :start 8
+                                    :end 7
+                                    :count 9))
+        (jump-table (make-array 256
+                                :element-type '(unsigned-byte 8)
+                                :initial-element 3)))
+    (setf (aref jump-table 4) 1)
+    (setf (aref jump-table 3) 2)
+    (is (= 5 (search-data ring-buffer #(3 4 5) jump-table)))
+    (is-false (search-data ring-buffer #(3 4 15) jump-table))))

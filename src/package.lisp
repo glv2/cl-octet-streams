@@ -16,5 +16,6 @@
            #:with-octet-pipe
            #:octet-stream-length
            #:octet-stream-ref
+           #:octet-stream-search
            #:make-connected-octet-streams
            #:with-connected-octet-streams))
