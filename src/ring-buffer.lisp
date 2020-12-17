@@ -61,8 +61,8 @@
 (defmethod resize ((ring-buffer ring-buffer) new-size)
   (with-slots (buffer size start end count) ring-buffer
     (when (> count new-size)
-      (error "A size of ~d is too small for a buffer containing ~d bytes."
-             new-size count))
+      (error "Wrong size of for a buffer containing ~d bytes: ~d."
+             count new-size))
     (let ((new-buffer (make-array new-size :element-type '(unsigned-byte 8))))
       (when (plusp count)
         (if (< start end)
@@ -139,3 +139,12 @@
            (setf start (mod (+ start length) size))
            (decf count length)))))
     (values seq length)))
+
+(defgeneric buffer-ref (ring-buffer index))
+
+(defmethod buffer-ref ((ring-buffer ring-buffer) index)
+  (with-slots (buffer size start count) ring-buffer
+    (unless (<= 0 index (1- count))
+      (error "Wrong index for a buffer containing ~d bytes: ~d." count index))
+    (let ((real-index (mod (+ start index) size)))
+      (aref buffer real-index))))
