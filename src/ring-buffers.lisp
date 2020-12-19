@@ -168,13 +168,13 @@
                                            :element-type '(unsigned-byte 8))))
                         (replace a pattern)
                         a)))
-         (jump-table (if (typep jump-table 'simple-octet-vector)
+         (jump-table (if (typep jump-table '(simple-array index (*)))
                          jump-table
-                         (let ((a (make-array 256
-                                              :element-type '(unsigned-byte 8))))
+                         (let ((a (make-array 256 :element-type 'index)))
                            (replace a jump-table)
                            a))))
-    (declare (type simple-octet-vector pattern jump-table)
+    (declare (type simple-octet-vector pattern)
+             (type (simple-array index (*)) jump-table)
              (type fixnum pattern-length pattern-end))
     (let ((buffer (buffer ring-buffer))
           (size (buffer-size ring-buffer))
