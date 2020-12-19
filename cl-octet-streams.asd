@@ -7,7 +7,7 @@
 (defsystem "cl-octet-streams"
   :name "cl-octet-streams"
   :description "In-memory octet streams"
-  :version "1.1"
+  :version "1.2"
   :license "GPL-3"
   :author "Guillaume LE VAILLANT"
   :depends-on ("trivial-gray-streams")
@@ -23,7 +23,7 @@
 (defsystem "cl-octet-streams/tests"
   :name "cl-octet-streams/tests"
   :description "Tests for cl-octet-streams"
-  :version "1.1"
+  :version "1.2"
   :license "GPL-3"
   :author "Guillaume LE VAILLANT"
   :depends-on ("cl-octet-streams" "fiveam")
