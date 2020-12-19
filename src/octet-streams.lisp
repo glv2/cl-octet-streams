@@ -29,6 +29,19 @@ JUMP-TABLE must be 256 bytes long. If there is a match, return the index of the
 beginning of the PATTERN in the STREAM, otherwise return NIL."
   (search-data (buffer stream) pattern jump-table))
 
+(defun make-jump-table (pattern)
+  "Return a jump table for PATTERN that can be used with OCTET-STREAM-SEARCH."
+  (let* ((size (length pattern))
+         (table (make-array 256
+                            :element-type 'fixnum
+                            :initial-element size)))
+    (do ((i (- size 2) (1- i))
+         (j 1 (1+ j)))
+        ((minusp i) table)
+      (let ((x (aref pattern i)))
+        (when (= (aref table x) size)
+          (setf (aref table x) j))))))
+
 
 (defclass octet-input-stream (octet-stream fundamental-binary-input-stream)
   ())

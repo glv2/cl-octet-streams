@@ -105,6 +105,12 @@ Search /pattern/ in the bytes of /stream/ using the Boyer-Moore algorithm. The
 /jump-table/ must be 256 bytes long. If there is a match, return the index of
 the beginning of the /pattern/ in the /stream/, otherwise return ~nil~.
 
+#+BEGIN_SRC lisp
+(make-jump-table pattern) => array
+#+END_SRC
+
+Return a jump table for /pattern/ that can be used with /octet-stream-search/.
+
 * Tests
 
 The tests require the [[https://common-lisp.net/project/fiveam][fiveam]] library.
