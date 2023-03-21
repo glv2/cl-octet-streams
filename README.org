@@ -1,5 +1,7 @@
 #+TITLE: cl-octet-streams
 
+The active repository is at https://codeberg.org/glv/cl-octet-streams
+
 *cl-octet-streams* is a library implementing in-memory octet streams for Common Lisp.
 It was inspired by the [[https://github.com/sharplispers/trivial-octet-streams][trivial-octet-streams]] and [[https://github.com/smithzvk/cl-plumbing][cl-plumbing]] libraries.
 
